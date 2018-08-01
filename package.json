@@ -1,0 +1,40 @@
+{
+  "name": "content-cloud-reference-app",
+  "version": "1.0.0",
+  "main": "server/server.js",
+  "engines": {
+    "node": ">=4"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "start": "node $NODE_DEBUG_OPTION .",
+    "test": "mocha test.js",
+    "nsp": "nsp check",
+    "populate_db": "node $NODE_DEBUG_OPTION server/scripts/populate_db.js"
+  },
+  "dependencies": {
+    "compression": "^1.0.3",
+    "content-cloud-validator-tool": "git://github.com/workday/content-cloud-validator-tool.git#v1.0-beta.4",
+    "cors": "^2.5.2",
+    "helmet": "^3.10.0",
+    "jsonwebtoken": "^8.3.0",
+    "loopback": "^3.20.0",
+    "loopback-boot": "^2.6.5",
+    "loopback-component-explorer": "^6.0.0",
+    "mocha": "^5.2.0",
+    "serve-favicon": "^2.0.1",
+    "strong-error-handler": "^3.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.17.1",
+    "eslint-config-loopback": "^8.0.0",
+    "faker": "^4.1.0",
+    "nsp": "^3.2.1"
+  },
+  "repository": {
+    "type": "",
+    "url": ""
+  },
+  "license": "Apache-2.0",
+  "description": "Workday's Content Cloud Reference Application"
+}

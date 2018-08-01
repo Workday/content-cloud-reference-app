@@ -1,0 +1,9 @@
+{
+  "mockdb": {
+    "name": "mockdb",
+    "localStorage": "mockdb",
+    "file": "data/mockdb.json",
+    "connector": "memory",
+    "connectionTimeout": 30000
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  },
+  "Content": {
+    "dataSource": "mockdb",
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "find": true,
+          "create": true,
+          "deleteById": true
+        }
+      }
+    }
+  },
+  "Thumbnail": {
+    "dataSource": "mockdb",
+    "public": false
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "name": "Content",
+  "base": "PersistedModel",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "scope": {
+    "order": "id",
+    "where": {
+      "deleted": false
+    }
+  },
+  "hidden": [
+    "deleted"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "required": true,
+      "description": "Unique identifier for the content item.  Must be unique within scope of Content Provider."
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "description": "Title of the content item displayed to end-users. Used for search purposes.",
+      "default": "default title"
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "description": "Description of the content item displayed to end-users. Used for search purposes. The following HTML decorative/layout elements are allowed to appear: `h1`, `h2`, `h3`, `p`, `strong`, `i`, `u`, `span`, `ul`, `li`",
+      "default": "default description"
+    },
+    "contentType": {
+      "type": "string",
+      "required": true,
+      "description": "One of `video`, `audio`, or `course`. Used for search purposes.",
+      "enum": [
+        "video",
+        "audio",
+        "course"
+      ],
+      "default": "course"
+    },
+    "playbackType": {
+      "type": "string",
+      "required": true,
+      "description": "One of `workday`, `iframe`, or `external`.  `workday` refers to both native video and native audio player that Workday provides.",
+      "enum": [
+        "workday",
+        "iframe",
+        "external"
+      ],
+      "default": "external"
+    },
+    "webPlaybackUrl": {
+      "type": "string",
+      "required": true,
+      "description": "URL referencing the content item. MUST use HTTPS URLs to avoid browser warnings if using Native or IFrame playback types.",
+      "default": "https://mycontentproviderurl.com/play/1"
+    },
+    "mobilePlaybackUrl": {
+      "type": "string",
+      "description": "For `external` playback scenarios ONLY. May include a custom schema URI to launch Content Provider's mobile application.",
+      "default": "mobileapp://play/1"
+    },
+    "thumbnails": {
+      "type": [
+        "Thumbnail"
+      ],
+      "description": "An array of Thumbnail objects."
+    },
+    "channelTitle": {
+      "type": "string",
+      "description": "Name of the entity publishing the content. This is only relevant if the content provider is a content aggregator. Used for search purposes.",
+      "default": ""
+    },
+    "deleted": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

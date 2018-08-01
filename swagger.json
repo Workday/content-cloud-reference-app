@@ -1,0 +1,130 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "**This is NOT a Workday API**, as a Content Provider, you’ll need to implement this API specification so that Workday’s Content Cloud can periodically, e.g., every 24 hours, call on behalf of all Workday Tenants to get updates to the metadata of the Content Provider’s catalogue.\n\n**Security Considerations:**\n- All Content Provider’s HTTP endpoints MUST be secured using `TLS 1.1` or greater using a publicly trusted certificate\n- Content Cloud has dynamic outbound IP addresses, IP based firewalls are NOT RECOMMENDED\n\n**Error Handling:**\n\nWorkday will validate and process all the incoming metadata from the Content Provider. When an error occurs, Workday staff assesses the issue. In cases where the Content Provider has provided invalid data, Workday will contact the technical support for the Content Provider to notify them of the issues. \n\nIn the event of a network outages, or non-200 HTTP responses, the Workday Content Cloud will cease calling until the next scheduled synchronization event. \n\nAt this time, there is not a programmatic way to inform Content Providers of errors. If this feature is desirable, inform your Workday representative of your need.",
+    "version" : "1.0.0",
+    "title" : "Content Cloud Ingestor API"
+  },
+  "host" : "mycontentprovider.com",
+  "basePath" : "/wday/contentcloud/",
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/contents" : {
+      "get" : {
+        "tags" : [ "contents" ],
+        "summary" : "Content Provider hosted API",
+        "description" : "Content Provider's **MUST** implement this specification in order for Content Cloud to be able to integrate with your service.",
+        "operationId" : "contents",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "version",
+          "in" : "query",
+          "description" : "The requested version of the response schema",
+          "required" : true,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Workday uses the standard JWT following these profile and guidelines\n  - All JWTs are signed, unsigned JWTs **MUST** be rejected.\n  - JWT are signed using an asymmetric public/private cryptography.\n  - The algorithm specified in the JWT header **MUST** be validated by the Content Provider to be `RS256`, `RS384`, OR `RS512`.\n  - The Content Provider **MUST NOT** allow None or HMAC, e.g. `HS256`, algorithms to prevent a security vulnerability with JWT header tampering. \n  - RSA public keys are obtained from Workday’s developer site.\n  - The Content Provider SHOULD support all Content Cloud public keys in order to facilitate future key rotations without interruption of service. Use the kid property to determine which public key to verify with.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "Link" : {
+                "type" : "string",
+                "description" : "URL to call for the next chunk of content.  We RECOMMEND using this pagination feature if your catalogue exceeds 1000 items."
+              }
+            }
+          },
+          "400" : {
+            "description" : "Missing or invalid parameters."
+          },
+          "401" : {
+            "description" : "Authenication failed."
+          },
+          "403" : {
+            "description" : "Access denied."
+          },
+          "500" : {
+            "description" : "Unexpected error."
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Content" : {
+      "type" : "object",
+      "required" : [ "contentType", "description", "id", "playbackType", "title", "webPlaybackUrl" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "description" : "Unique identifier for the content item.  Must be unique within scope of Content Provider."
+        },
+        "title" : {
+          "type" : "string",
+          "description" : "Title of the content item displayed to end-users. Used for search purposes."
+        },
+        "description" : {
+          "type" : "string",
+          "description" : "Description of the content item displayed to end-users. Used for search purposes. The following HTML decorative/layout elements are allowed to appear: `h1`, `h2`, `h3`, `p`, `strong`, `i`, `u`, `span`, `ul`, `li`"
+        },
+        "contentType" : {
+          "$ref" : "#/definitions/ContentType"
+        },
+        "playbackType" : {
+          "$ref" : "#/definitions/PlaybackType"
+        },
+        "webPlaybackUrl" : {
+          "type" : "string",
+          "description" : "URL referencing the content item. MUST use HTTPS URLs to avoid browser warnings if using Native or IFrame playback types."
+        },
+        "mobilePlaybackUrl" : {
+          "type" : "string",
+          "description" : "For `external` playback scenarios ONLY. May include a custom schema URI to launch Content Provider's mobile application."
+        },
+        "channelTitle" : {
+          "type" : "string",
+          "description" : "Name of the entity publishing the content. This is only relevant if the content provider is a content aggregator. Used for search purposes."
+        }
+      },
+      "xml" : {
+        "name" : "Content"
+      }
+    },
+    "Thumbnail" : {
+      "type" : "object",
+      "required" : [ "height", "url", "width" ],
+      "properties" : {
+        "url" : {
+          "type" : "string",
+          "description" : "URL referencing the thumbnail item.  SHOULD be `jpeg` format."
+        },
+        "height" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Actual height in pixels"
+        },
+        "width" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Actual width in pixels"
+        }
+      }
+    },
+    "PlaybackType" : {
+      "type" : "string",
+      "description" : "One of `workday`, `iframe`, or `external`.  `workday` refers to both native video and native audio player that Workday provides.",
+      "enum" : [ "workday", "iframe", "external" ]
+    },
+    "ContentType" : {
+      "type" : "string",
+      "description" : "One of `video`, `audio`, or `course`. Used for search purposes.",
+      "enum" : [ "video", "audio", "course" ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "Thumbnail",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "hidden": [
+    "id"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "required": true,
+      "description": "URL referencing the thumbnail item.  SHOULD be `jpeg` format.",
+      "default": "https://mycontentproviderurl.com/assests/1.jpeg"
+    },
+    "height": {
+      "type": "number",
+      "required": true,
+      "description": "Actual height in pixels",
+      "format": "int32",
+      "default": 50
+    },
+    "width": {
+      "type": "number",
+      "required": true,
+      "description": "Actual width in pixels",
+      "format": "int32",
+      "default": 50
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
